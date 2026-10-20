@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<meta property="og:title" content="Every movie I&rsquo;ve watched, ranked.">
+<meta property="og:title" content="Full list (1,147) ranked">
 <meta property="og:description" content="1,147 movies, ranked.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 fill=%22%23ffffff%22/%3E%3Ctext x=%2232%22 y=%2248%22 font-family=%22Times%20New%20Roman,Times,serif%22 font-size=%2252%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23000000%22%3EM%3C/text%3E%3C/svg%3E">
@@ -50,7 +50,7 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 <main>
   <p><a href="/">Murphy Shimamoto</a></p>
 
-  <h1>Every movie I&rsquo;ve watched, ranked.</h1>
+  <h1>Full list (<span class="movie-count">1,147</span>) ranked</h1>
   <h2 id="count">1,147 movies</h2>
 
   <!-- Best first. Numbers come from the <ol>, so to add a film, insert its <li> at its rank. -->
@@ -1205,10 +1205,11 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   </ol>
 </main>
 <script>
-  // Keeps the count in the subheader in step with the list.
+  // Keeps the counts in the heading and subheader in step with the list.
   (function () {
-    var n = document.querySelectorAll("#ranking > li").length;
-    document.getElementById("count").textContent = n.toLocaleString("en-US") + " movies";
+    var n = document.querySelectorAll("#ranking > li").length.toLocaleString("en-US");
+    document.getElementById("count").textContent = n + " movies";
+    document.querySelectorAll(".movie-count").forEach(function (el) { el.textContent = n; });
   })();
 </script>
 </body>

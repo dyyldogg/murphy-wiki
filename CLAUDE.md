@@ -75,7 +75,7 @@ To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.h
 
 Make its page as described under Essay pages, and link the title with a root path: `<b><a href="/writing/<slug>.html">Title</a></b>`.
 
-**Add a film to the ranking.** In `movies.html`, insert `<li><i>Title</i></li>` inside `<ol id="ranking">` at the film's rank (best first). Put a year or note that isn't part of the title outside the italics: `<li><i>Cold War</i> (2018)</li>`. Escape `&` as `&amp;`. The numbers come from the `<ol>`, and the movie count under the heading updates itself, so don't type either by hand.
+**Add a film to the ranking.** In `movies.html`, insert `<li><i>Title</i></li>` inside `<ol id="ranking">` at the film's rank (best first). Put a year or note that isn't part of the title outside the italics: `<li><i>Cold War</i> (2018)</li>`. Escape `&` as `&amp;`. The numbers come from the `<ol>`, and the counts on the movie page update themselves. The home page link, `Full list (1,147) ranked`, has no script, so update its number by hand whenever the list grows or shrinks.
 
 **Change a photo.** Replace `photo.jpg` (main page) or `aura.jpg` (aura page), keeping the file name. Save the new file at twice the size you want it shown. For example, a 320×320 file shows at 160×160.
 
