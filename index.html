@@ -188,7 +188,7 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
         <span class="player-artist">Shaun Dean, Sean Coy, Kaylee</span>
       </div>
       <div class="player-track"><div class="player-fill" id="player-fill"></div></div>
-      <div class="player-times"><span id="player-elapsed">0:30</span><span class="player-hint" id="player-hint">Click anywhere for sound</span><span id="player-remaining">-2:51</span></div>
+      <div class="player-times"><span id="player-elapsed">0:56</span><span class="player-hint" id="player-hint">Click anywhere for sound</span><span id="player-remaining">-2:25</span></div>
     </div>
     <video id="player-audio" class="player-media" loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   </div>
@@ -267,8 +267,8 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     // On phones a swipe ends in a touch that browsers count as interaction, so scrolling turns the sound on there.
     if (window.matchMedia && matchMedia("(pointer: coarse)").matches) document.getElementById("player-hint").textContent = "Scroll or tap for sound";
     audio.preload = "auto";
-    // Start 30 seconds in: the #t=30 asks the browser to begin there, and the check below makes sure.
-    var START = 30, started = false;
+    // Start 56 seconds in: the #t=56 asks the browser to begin there, and the check below makes sure.
+    var START = 56, started = false;
     audio.src = "/what-can-i-do.mp3#t=" + START;
     audio.addEventListener("loadedmetadata", function () { if (!started && audio.currentTime < START - 1) audio.currentTime = START; });
     audio.addEventListener("playing", function () { started = true; });
