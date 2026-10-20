@@ -1,0 +1,109 @@
+/* Essay pages: an MLA paper as it looks in Google Docs.
+   Letter-size pages (8.5 x 11 in at 96px/in) on the Docs canvas, 1in margins,
+   Times New Roman 12pt, double spacing, header at 0.5in, 0.5in indents. */
+:root {
+  --canvas: #f9fbfd;
+  --paper: #ffffff;
+  --ink: #000000;
+  --link: #0000ee;
+  --visited: #551a8b;
+  --serif: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", serif;
+
+  --page-w: 816px;        /* 8.5in */
+  --page-h: 1056px;       /* 11in */
+  --margin: 96px;         /* 1in */
+  --header-top: 48px;     /* 0.5in */
+  --indent: 48px;         /* 0.5in */
+  --line: 36.8px;         /* Docs "Double" for Times New Roman 12pt: 2 x 1.15 x 16px */
+  --half-leading: 9.2px;  /* Docs adds spacing below text, so lift the first line */
+  --page-gap: 12px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+}
+
+a { color: var(--link); }
+a:visited { color: var(--visited); }
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+.topbar {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 0;
+}
+
+.doc {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 48px;
+}
+
+/* Paginated view (built by essay.js) */
+.frame { position: relative; margin-inline: auto; }
+.pages {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--page-w);
+  transform-origin: 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+}
+.page {
+  position: relative;
+  width: var(--page-w);
+  height: var(--page-h);
+  background: var(--paper);
+  box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15), 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+}
+.page-header {
+  position: absolute;
+  top: var(--header-top);
+  right: var(--margin);
+  line-height: 1.15;
+}
+.page-body {
+  position: absolute;
+  top: calc(var(--margin) - var(--half-leading));
+  left: var(--margin);
+  right: var(--margin);
+  height: calc(var(--page-h) - 2 * var(--margin));
+  overflow: hidden;
+}
+
+/* MLA text */
+.essay { line-height: var(--line); }
+.essay p,
+.essay h1,
+.essay h2 { margin: 0; font-size: inherit; font-weight: 400; }
+.essay p { text-indent: var(--indent); }
+.essay p.heading-line,
+.essay p.cont { text-indent: 0; }
+.essay .title,
+.essay .works-cited-title { text-align: center; }
+.essay p.entry { text-indent: calc(-1 * var(--indent)); padding-left: var(--indent); }
+.essay p.entry.cont { text-indent: 0; }
+
+/* Without JavaScript: one long page with the same text formatting */
+.source {
+  max-width: var(--page-w);
+  margin-inline: auto;
+  background: var(--paper);
+  padding: var(--margin);
+  box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+.source .works-cited-title { margin-top: var(--line); }
+html.js .source { display: none; }
+
+@media (max-width: 600px) {
+  .source { padding: 24px; }
+}

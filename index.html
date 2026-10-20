@@ -44,7 +44,6 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   display: block;
   width: auto;
   height: auto;
-  max-height: 160px;
   max-width: 100%;
 }
 
@@ -60,8 +59,9 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   <h1>Murphy Shimamoto</h1>
 
   <!-- "photo.jpg" is deliberately a relative path. At / it loads /photo.jpg (the portrait);
-       at /aura/ it loads /aura/photo.jpg, which vercel.json maps to /aura.jpg. Keep it relative. -->
-  <p><img class="portrait" src="photo.jpg" alt="Murphy Shimamoto"></p>
+       at /aura/ it loads /aura/photo.jpg, which vercel.json maps to /aura.jpg. Keep it relative.
+       The "2x" means each photo shows at half its pixel size, so each file sets its own display size. -->
+  <p><img class="portrait" srcset="photo.jpg 2x" alt="Murphy Shimamoto"></p>
 
   <h2>Contact</h2>
   <p>
