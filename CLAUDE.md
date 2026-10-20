@@ -13,6 +13,8 @@ Both addresses serve the same `index.html`. Only the photo differs, so any edit 
 - `vercel.json` sends `/aura` to `/aura/`, serves `index.html` there, and maps `/aura/photo.jpg` to `aura.jpg`.
 - The `2x` makes each photo show at half its pixel size, so each file sets its own display size. Don't add a `src` attribute, because Chrome would then show the photo at full size on regular screens.
 
+The `/aura` page also has a music player under the photo. Its markup (`#player`) sits in `index.html` with `hidden`, and the script at the bottom of `index.html` shows it and loads `/what-can-i-do.mp3` only when the path is `/aura`, so the main address never shows it or downloads the song. Browsers block sound until a visitor interacts, so the script tries to autoplay and otherwise starts the song on the first click or key press. The player's look (pearl body, green LCD, rubber button) is an original design: don't make it imitate an iPod or any other real product. To change the song, replace `what-can-i-do.mp3` and update the title and artist in the player's LCD.
+
 Rules that keep this working:
 
 - Never create a separate aura page or an `aura/` folder.
@@ -25,6 +27,7 @@ Rules that keep this working:
 - `photo.jpg`: the portrait on the main page. 320×320 pixels, shown at 160×160.
 - `aura.jpg`: the photo on the `/aura` page, cropped so Murphy is centered. 750×589 pixels, shown at 375×295.
 - `vercel.json`: the `/aura` routing described above, plus `/movies` → `movies.html`.
+- `what-can-i-do.mp3`: the song that plays on the `/aura` page.
 - `movies.html`: every movie Murphy has watched, ranked, at `murphy.wiki/movies`.
 - `writing/*.html`: one page per essay.
 - `essay.css`, `essay.js`: shared by every essay page. They lay the essay out like an MLA paper in Google Docs.
@@ -35,7 +38,7 @@ The look is deliberately plain, like an unstyled academic homepage. Keep it that
 
 - White background, black text, Times New Roman, default blue/purple underlined links.
 - Bold `<h1>` name and the photo under it, both centered. Then left-aligned `<h2>` sections: Contact, About, Writing, Movies.
-- No frameworks, build tools, web fonts, or JavaScript on the home page. The only scripts on the site are `essay.js` and the one-line count updater in `movies.html`.
+- No frameworks, build tools, or web fonts. The only scripts on the site are the `/aura` music player at the bottom of `index.html`, `essay.js`, and the one-line count updater in `movies.html`.
 - Film, book, and artwork titles go in `<i>`.
 
 ## Essay pages

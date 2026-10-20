@@ -48,6 +48,68 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   margin-inline: auto;
 }
 
+/* Music player, shown only at /aura: an original early-2000s pocket-player look
+   (pearl plastic body, green backlit LCD, rubber button). Hidden on the main address. */
+.player {
+  --shell-top: #fdfdfc;
+  --shell-bottom: #e9eaed;
+  --shell-edge: #c6c9ce;
+  --lcd-top: #cbd6b6;
+  --lcd-bottom: #b7c49f;
+  --lcd-edge: #8c987a;
+  --lcd-ink: #1c2515;
+  width: 252px;
+  max-width: 100%;
+  margin: 0 auto 1.25em;
+  font-family: "Courier New", Courier, monospace;
+}
+.player-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 14px 12px;
+  background: linear-gradient(180deg, var(--shell-top), var(--shell-bottom));
+  border: 1px solid var(--shell-edge);
+  border-radius: 18px;
+  box-shadow: inset 0 1px 0 #ffffff, 0 6px 14px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.lcd {
+  padding: 8px 10px 7px;
+  color: var(--lcd-ink);
+  background: linear-gradient(180deg, var(--lcd-top), var(--lcd-bottom));
+  border: 1px solid var(--lcd-edge);
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  line-height: 1.3;
+}
+.lcd-row { display: flex; align-items: center; gap: 7px; font-weight: 700; }
+.lcd-row svg { flex: none; width: 9px; height: 9px; fill: var(--lcd-ink); }
+.lcd-title, .lcd-artist { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lcd-artist { font-size: 11px; }
+.lcd-bar { height: 6px; margin: 7px 0 4px; border: 1px solid var(--lcd-ink); }
+.lcd-fill { width: 0; height: 100%; background: var(--lcd-ink); }
+.lcd-times { display: flex; justify-content: space-between; font-size: 11px; font-variant-numeric: tabular-nums; }
+.player-btn {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #b6bac0;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #ffffff, #dcdfe3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.player-btn svg { width: 12px; height: 12px; fill: #2b2f35; }
+.player-btn:active { background: linear-gradient(180deg, #dcdfe3, #f5f6f7); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); }
+.player-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.player .when-playing { display: none; }
+.player.is-playing .when-playing { display: block; }
+.player.is-playing .when-paused { display: none; }
+
 ul.entries > li { margin-bottom: 1em; }
 
 a { color: var(--link); }
@@ -63,6 +125,27 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
        at /aura/ it loads /aura/photo.jpg, which vercel.json maps to /aura.jpg. Keep it relative.
        The "2x" means each photo shows at half its pixel size, so each file sets its own display size. -->
   <p><img class="portrait" srcset="photo.jpg 2x" alt="Murphy Shimamoto"></p>
+
+  <!-- Music player for the /aura page only. The script at the bottom shows it there and leaves it hidden at /. -->
+  <div class="player" id="player" hidden>
+    <div class="player-body">
+      <div class="lcd" aria-live="off">
+        <div class="lcd-row">
+          <svg class="when-playing" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          <svg class="when-paused" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zM7 1h3v10H7z"/></svg>
+          <span class="lcd-title">What Can I Do</span>
+        </div>
+        <div class="lcd-artist">Shaun Dean, Sean Coy, Kaylee</div>
+        <div class="lcd-bar"><div class="lcd-fill" id="player-fill"></div></div>
+        <div class="lcd-times"><span id="player-elapsed">0:00</span><span id="player-remaining">-3:21</span></div>
+      </div>
+      <button class="player-btn" id="player-toggle" type="button" aria-label="Play">
+        <svg class="when-paused" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+        <svg class="when-playing" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zM7 1h3v10H7z"/></svg>
+      </button>
+    </div>
+    <audio id="player-audio" loop preload="none"></audio>
+  </div>
 
   <h2>Contact</h2>
   <p>
@@ -112,5 +195,56 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   <p><a href="/movies">Full list (1,147) ranked</a></p>
 
 </main>
+<script>
+  // /aura only: show the player and play the song. Does nothing at the main address.
+  (function () {
+    if (!/^\/aura(\/|$)/.test(location.pathname)) return;
+    var player = document.getElementById("player");
+    var audio = document.getElementById("player-audio");
+    var toggle = document.getElementById("player-toggle");
+    var fill = document.getElementById("player-fill");
+    var elapsed = document.getElementById("player-elapsed");
+    var remaining = document.getElementById("player-remaining");
+    player.hidden = false;
+    audio.preload = "auto";
+    audio.src = "/what-can-i-do.mp3";
+
+    function time(t) {
+      t = Math.max(0, Math.floor(t || 0));
+      return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0");
+    }
+    function render() {
+      var playing = !audio.paused;
+      player.classList.toggle("is-playing", playing);
+      toggle.setAttribute("aria-label", playing ? "Pause" : "Play");
+      var d = audio.duration || 0;
+      fill.style.width = d ? (audio.currentTime / d) * 100 + "%" : "0";
+      elapsed.textContent = time(audio.currentTime);
+      if (d) remaining.textContent = "-" + time(d - audio.currentTime);
+    }
+    ["play", "pause", "timeupdate", "loadedmetadata"].forEach(function (e) { audio.addEventListener(e, render); });
+    toggle.addEventListener("click", function () {
+      if (audio.paused) audio.play().catch(function () {}); else audio.pause();
+    });
+
+    // Browsers block sound until the visitor interacts, so if autoplay is refused,
+    // start on the first click, tap, or key press anywhere on the page.
+    function waitForVisitor() {
+      function start(e) {
+        stop();
+        if (!player.contains(e.target)) audio.play().catch(function () {});
+      }
+      function stop() {
+        document.removeEventListener("pointerdown", start, true);
+        document.removeEventListener("keydown", start, true);
+      }
+      document.addEventListener("pointerdown", start, true);
+      document.addEventListener("keydown", start, true);
+    }
+    var attempt = audio.play();
+    if (attempt && attempt.catch) attempt.catch(waitForVisitor);
+    render();
+  })();
+</script>
 </body>
 </html>
