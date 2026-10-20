@@ -59,8 +59,22 @@
       });
     }
 
+    function lineHeight() {
+      return parseFloat(getComputedStyle(body).lineHeight) || 36.8;
+    }
+
     function place(block, isRetry) {
       body.appendChild(block);
+
+      // A section heading never sits alone at the bottom of a page.
+      if (block.classList.contains("section-heading") && body.childNodes.length > 1 &&
+          block.getBoundingClientRect().bottom - body.getBoundingClientRect().top + lineHeight() > body.clientHeight + 1) {
+        body.removeChild(block);
+        newPage();
+        body.appendChild(block);
+        return;
+      }
+
       if (!overflows()) return;
 
       // Headings and short lines move to the next page whole.
@@ -104,6 +118,11 @@
       var block = child.cloneNode(true);
       if (child.hasAttribute("data-page-break") && body.childNodes.length) newPage();
       place(block, false);
+    });
+
+    // The pages now hold the live copy, so footnote links must point there, not at the hidden source.
+    Array.prototype.forEach.call(source.querySelectorAll("[id]"), function (el) {
+      el.removeAttribute("id");
     });
 
     function fit() {

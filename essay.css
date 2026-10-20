@@ -92,6 +92,13 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .essay .works-cited-title { text-align: center; }
 .essay p.entry { text-indent: calc(-1 * var(--indent)); padding-left: var(--indent); }
 .essay p.entry.cont { text-indent: 0; }
+.essay .section-heading { font-weight: 700; }
+.essay .notes-title { text-align: center; }
+
+/* Footnote numbers: superscript without stretching the double-spaced lines */
+.essay sup { font-size: 0.68em; line-height: 0; vertical-align: super; }
+.essay sup a { color: inherit; text-decoration: none; }
+.essay sup a:hover { text-decoration: underline; }
 
 /* Without JavaScript: one long page with the same text formatting */
 .source {
@@ -101,7 +108,8 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   padding: var(--margin);
   box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
-.source .works-cited-title { margin-top: var(--line); }
+.source .works-cited-title,
+.source .notes-title { margin-top: var(--line); }
 html.js .source { display: none; }
 
 @media (max-width: 600px) {

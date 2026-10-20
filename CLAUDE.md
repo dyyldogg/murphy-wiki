@@ -56,6 +56,8 @@ To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.h
 </article>
 ```
 
+- Section headings, if the essay has them: `<h2 class="section-heading">Plato</h2>`. They're bold and flush left.
+- Footnotes are numbered endnotes on their own Notes page, placed before Works Cited. In the text: `<sup><a id="fnref1" href="#fn1">1</a></sup>`. On the Notes page, after `<h2 class="notes-title" data-page-break>Notes</h2>`: `<p class="note" id="fn1"><sup><a href="#fnref1">1</a></sup> Nietzsche, <i>The Gay Science</i>, 193-4.</p>`.
 - The date line uses MLA order: day, month, year.
 - Italicize a film or book title inside the essay title, as MLA does: `<i>You Can See Everything</i>: The Impenetrability of the Subject`.
 - Keep Works Cited entries in alphabetical order, ignoring a leading "The" or "A".
