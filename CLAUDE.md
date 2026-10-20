@@ -37,7 +37,8 @@ Rules that keep this working:
 The look is deliberately plain, like an unstyled academic homepage. Keep it that way unless Murphy asks otherwise.
 
 - White background, black text, Times New Roman, default blue/purple underlined links.
-- Bold `<h1>` name and the photo under it, both centered. Then left-aligned `<h2>` sections: Contact, About, Writing, Movies.
+- Everything is left-aligned: bold `<h1>` name, the photo under it, then `<h2>` sections: Contact, About, Writing, Movies.
+- The email is written out as `murphy.shimamoto[at]gmail[dot]com`, not as a link.
 - No frameworks, build tools, or web fonts. The only scripts on the site are the `/aura` music player at the bottom of `index.html`, `essay.js`, and the one-line count updater in `movies.html`.
 - Film, book, and artwork titles go in `<i>`.
 
