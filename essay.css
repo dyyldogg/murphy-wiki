@@ -95,6 +95,19 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .essay .section-heading { font-weight: 700; }
 .essay .notes-title { text-align: center; }
 
+/* Footnotes at the foot of the page that cites them (set by essay.js): 10pt, single spaced,
+   under a short rule, sitting on the bottom margin. */
+.page-notes {
+  position: absolute;
+  left: var(--margin);
+  right: var(--margin);
+  bottom: calc(var(--margin) + var(--half-leading));
+  display: flow-root;
+}
+.page-notes.essay { font-size: 13.333px; line-height: 1.15; }
+.page-notes .note-rule { width: 33%; height: 0; border-top: 1px solid var(--ink); margin-bottom: 6px; }
+.page-notes p.note { margin: 0 0 3px; text-indent: 0; }
+
 /* Footnote numbers: superscript without stretching the double-spaced lines */
 .essay sup { font-size: 0.68em; line-height: 0; vertical-align: super; }
 .essay sup a { color: inherit; text-decoration: none; }
