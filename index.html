@@ -143,11 +143,35 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   transition: width 0.25s linear;
 }
 .player-times { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-.player-hint { display: none; font-style: italic; }
-.player.is-waiting .player-hint { display: inline; }
 .player .when-playing { display: none; }
 .player.is-playing .when-playing { display: block; }
 .player.is-playing .when-paused { display: none; }
+/* /aura only: when the browser blocks sound, a plain full-screen Enter screen. Clicking it is the
+   interaction browsers require, so the song starts with sound from the beginning. */
+.enter {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  width: 100%;
+  margin: 0;
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px));
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  cursor: pointer;
+}
+.enter[hidden] { display: none; }
+.enter-name { font-size: 2em; font-weight: 700; }
+.enter-cta { font-size: 1.25em; color: var(--link); text-decoration: underline; }
+.enter:focus-visible { outline: none; }
+html.is-gated, html.is-gated body { overflow: hidden; }
 /* Keep the player hidden at the main address: .player's display: flex would otherwise override `hidden`. */
 .player[hidden] { display: none; }
 /* The song plays through a hidden <video>: browsers allow silent autoplay only for video, which lets it start instantly. */
@@ -162,6 +186,11 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 </style>
 </head>
 <body>
+<!-- /aura only: shown when the browser blocks sound. One click starts the song with sound. -->
+<button class="enter" id="enter" type="button" hidden>
+  <span class="enter-name">Murphy Shimamoto</span>
+  <span class="enter-cta">Enter</span>
+</button>
 <main>
   <h1>Murphy Shimamoto</h1>
 
@@ -188,7 +217,7 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
         <span class="player-artist">Shaun Dean, Sean Coy, Kaylee</span>
       </div>
       <div class="player-track"><div class="player-fill" id="player-fill"></div></div>
-      <div class="player-times"><span id="player-elapsed">0:00</span><span class="player-hint" id="player-hint">Click anywhere for sound</span><span id="player-remaining">-3:21</span></div>
+      <div class="player-times"><span id="player-elapsed">0:00</span><span id="player-remaining">-3:21</span></div>
     </div>
     <video id="player-audio" class="player-media" loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   </div>
@@ -264,8 +293,6 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     var elapsed = document.getElementById("player-elapsed");
     var remaining = document.getElementById("player-remaining");
     player.hidden = false;
-    // On phones a swipe ends in a touch that browsers count as interaction, so scrolling turns the sound on there.
-    if (window.matchMedia && matchMedia("(pointer: coarse)").matches) document.getElementById("player-hint").textContent = "Scroll or tap for sound";
     audio.preload = "auto";
     audio.src = "/what-can-i-do.mp3";
 
@@ -284,30 +311,25 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     }
     ["play", "pause", "timeupdate", "loadedmetadata"].forEach(function (e) { audio.addEventListener(e, render); });
     toggle.addEventListener("click", function () {
-      if (audio.muted) { audio.muted = false; audio.play().then(soundOn).catch(function () {}); return; }
       if (audio.paused) audio.play().catch(function () {}); else audio.pause();
     });
 
-    // Play the instant the page loads. Browsers only allow sound after the visitor interacts, so if
-    // that's refused, keep the song playing silently (always allowed) and turn the sound on at the
-    // first click, tap, or key press anywhere. Taps only count on pointerup/touchend, so listen for all.
-    var events = ["pointerdown", "pointerup", "touchend", "click", "keydown"];
-    function soundOn() {
-      if (audio.muted || audio.paused) return;
-      player.classList.remove("is-waiting");
-      events.forEach(function (ev) { document.removeEventListener(ev, enableSound, true); });
-    }
-    function enableSound(e) {
-      if (player.contains(e.target)) return;
+    // Play the instant the page loads. Browsers allow sound only after the visitor interacts with the
+    // site, so if this play is refused, show the Enter screen: clicking it is that interaction, and the
+    // song then starts with sound from the beginning. If sound is already allowed, no screen appears.
+    var gate = document.getElementById("enter");
+    gate.addEventListener("click", function () {
+      gate.hidden = true;
+      document.documentElement.classList.remove("is-gated");
       audio.muted = false;
-      audio.play().then(soundOn).catch(function () {});
-    }
+      audio.currentTime = 0;
+      audio.play().catch(function () {});
+    });
     var attempt = audio.play();
     if (attempt && attempt.catch) attempt.catch(function () {
-      audio.muted = true;
-      player.classList.add("is-waiting");
-      events.forEach(function (ev) { document.addEventListener(ev, enableSound, true); });
-      audio.play().catch(function () {});
+      document.documentElement.classList.add("is-gated");
+      gate.hidden = false;
+      gate.focus();
     });
     render();
   })();
