@@ -7,7 +7,7 @@
 <meta property="og:title" content="Murphy Shimamoto">
 <meta property="og:description" content="Writing and notes on movies, philosophy, and art.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="/murphy.jpg">
+<meta property="og:image" content="/photo.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 fill=%22%23ffffff%22/%3E%3Ctext x=%2232%22 y=%2248%22 font-family=%22Times%20New%20Roman,Times,serif%22 font-size=%2252%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23000000%22%3EM%3C/text%3E%3C/svg%3E">
 <title>Murphy Shimamoto</title>
 <meta name="description" content="Murphy Shimamoto writes about movies, philosophy, and art.">
@@ -42,18 +42,10 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
 
 .portrait {
   display: block;
-  width: 160px;
-  height: 160px;
-  max-width: 100%;
-  object-fit: cover;
-}
-
-.snapshot {
-  display: block;
-  width: 560px;
-  max-width: 100%;
+  width: auto;
   height: auto;
-  margin-top: 2em;
+  max-height: 160px;
+  max-width: 100%;
 }
 
 ul.entries > li { margin-bottom: 1em; }
@@ -67,7 +59,9 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 <main>
   <h1>Murphy Shimamoto</h1>
 
-  <p><img class="portrait" src="murphy.jpg" alt="Murphy Shimamoto" width="160" height="160"></p>
+  <!-- "photo.jpg" is deliberately a relative path. At / it loads /photo.jpg (the portrait);
+       at /aura/ it loads /aura/photo.jpg, which vercel.json maps to /aura.jpg. Keep it relative. -->
+  <p><img class="portrait" src="photo.jpg" alt="Murphy Shimamoto"></p>
 
   <h2>Contact</h2>
   <p>
@@ -113,7 +107,6 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     <li><i>Paris, Texas</i> (Wim Wenders, 1984)</li>
   </ul>
 
-  <p><img class="snapshot" src="friends.jpg" alt="Murphy in heart-shaped sunglasses, getting kissed on both cheeks by two friends" width="560" height="295"></p>
 </main>
 </body>
 </html>
