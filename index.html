@@ -48,67 +48,108 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   margin-inline: auto;
 }
 
-/* Music player, shown only at /aura: an original early-2000s pocket-player look
-   (pearl plastic body, green backlit LCD, rubber button). Hidden on the main address. */
+/* Music player, shown only at /aura: an original Frutiger Aero-style bar. Glossy sky-blue glass
+   with a top-half shine and bubbles, a glossy green orb button, and an aqua progress bar. */
 .player {
-  --shell-top: #fdfdfc;
-  --shell-bottom: #e9eaed;
-  --shell-edge: #c6c9ce;
-  --lcd-top: #cbd6b6;
-  --lcd-bottom: #b7c49f;
-  --lcd-edge: #8c987a;
-  --lcd-ink: #1c2515;
-  width: 252px;
+  --sky-top: #f4fcff;
+  --sky-mid: #d6f0fc;
+  --sky-low: #b4e0f6;
+  --glass-edge: #69b4da;
+  --ink: #0b3a57;
+  --ink-soft: #2d6888;
+  --orb-light: #c4f58a;
+  --orb-mid: #52c43c;
+  --orb-dark: #1c7a1f;
+  --aqua-light: #a6f2ff;
+  --aqua: #22b5e6;
+  --aqua-dark: #0a7db6;
+  box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 375px;
   max-width: 100%;
   margin: 0 auto 1.25em;
-  font-family: "Courier New", Courier, monospace;
-}
-.player-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px 14px 12px;
-  background: linear-gradient(180deg, var(--shell-top), var(--shell-bottom));
-  border: 1px solid var(--shell-edge);
+  padding: 9px 18px 9px 9px;
+  overflow: hidden;
+  border: 1px solid var(--glass-edge);
   border-radius: 18px;
-  box-shadow: inset 0 1px 0 #ffffff, 0 6px 14px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 49%, var(--sky-low) 51%, var(--sky-mid) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 14px rgba(19, 104, 150, 0.25), 0 1px 2px rgba(19, 104, 150, 0.3);
+  font-family: "Segoe UI", "Frutiger", "Frutiger Linotype", "Myriad Pro", "Helvetica Neue", Arial, sans-serif;
 }
-.lcd {
-  padding: 8px 10px 7px;
-  color: var(--lcd-ink);
-  background: linear-gradient(180deg, var(--lcd-top), var(--lcd-bottom));
-  border: 1px solid var(--lcd-edge);
-  border-radius: 6px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.18);
-  font-size: 13px;
-  line-height: 1.3;
+.player::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* a column of bubbles rising in the right margin, clear of the text, plus a soft green glow */
+  background:
+    radial-gradient(circle at calc(100% - 9px) 19px, rgba(255, 255, 255, 0) 0 3.5px, rgba(255, 255, 255, 0.9) 4.5px 5.5px, rgba(255, 255, 255, 0) 6.5px),
+    radial-gradient(circle at calc(100% - 7px) 35px, rgba(255, 255, 255, 0) 0 1.5px, rgba(255, 255, 255, 0.85) 2.5px 3.5px, rgba(255, 255, 255, 0) 4.5px),
+    radial-gradient(circle at calc(100% - 8px) 47px, rgba(255, 255, 255, 0.85) 0 1.5px, rgba(255, 255, 255, 0) 2.5px),
+    radial-gradient(circle at calc(100% - 5px) 58px, rgba(255, 255, 255, 0.7) 0 1px, rgba(255, 255, 255, 0) 2px),
+    radial-gradient(ellipse at 100% 100%, rgba(120, 210, 90, 0.28), rgba(120, 210, 90, 0) 45%);
 }
-.lcd-row { display: flex; align-items: center; gap: 7px; font-weight: 700; }
-.lcd-row svg { flex: none; width: 9px; height: 9px; fill: var(--lcd-ink); }
-.lcd-title, .lcd-artist { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lcd-artist { font-size: 11px; }
-.lcd-bar { height: 6px; margin: 7px 0 4px; border: 1px solid var(--lcd-ink); }
-.lcd-fill { width: 0; height: 100%; background: var(--lcd-ink); }
-.lcd-times { display: flex; justify-content: space-between; font-size: 11px; font-variant-numeric: tabular-nums; }
-.player-btn {
-  align-self: center;
+.player-orb {
+  position: relative;
+  flex: none;
   display: grid;
   place-items: center;
-  width: 76px;
-  height: 30px;
+  width: 48px;
+  height: 48px;
   padding: 0;
-  border: 1px solid #b6bac0;
-  border-radius: 15px;
-  background: linear-gradient(180deg, #ffffff, #dcdfe3);
-  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--orb-dark);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 115%, var(--orb-light) 0%, var(--orb-mid) 48%, var(--orb-dark) 100%);
+  box-shadow: inset 0 -3px 6px rgba(255, 255, 255, 0.35), 0 2px 5px rgba(0, 60, 20, 0.35);
   cursor: pointer;
 }
-.player-btn svg { width: 12px; height: 12px; fill: #2b2f35; }
-.player-btn:active { background: linear-gradient(180deg, #dcdfe3, #f5f6f7); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); }
-.player-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.player-orb::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  right: 8px;
+  height: 45%;
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.12));
+  pointer-events: none;
+}
+.player-orb svg { position: relative; width: 18px; height: 18px; fill: #ffffff; filter: drop-shadow(0 1px 1px rgba(0, 50, 10, 0.6)); }
+.player-orb:hover { filter: brightness(1.06) saturate(1.1); }
+.player-orb:active { transform: translateY(1px); }
+.player-orb:focus-visible { outline: 2px solid var(--aqua-dark); outline-offset: 3px; }
+.player-screen { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.player-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; white-space: nowrap; color: var(--ink); }
+.player-title { flex: none; max-width: 60%; overflow: hidden; text-overflow: ellipsis; font-size: 14px; font-weight: 700; }
+.player-artist { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--ink-soft); }
+.player-track {
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid #86bfdb;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #cde5f1, #f5fbff);
+  box-shadow: inset 0 1px 2px rgba(0, 60, 100, 0.25);
+}
+.player-fill {
+  width: 0;
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--aqua-light) 0%, var(--aqua) 55%, var(--aqua-dark) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: width 0.25s linear;
+}
+.player-times { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.player-hint { display: none; font-style: italic; }
+.player.is-waiting .player-hint { display: inline; }
 .player .when-playing { display: none; }
 .player.is-playing .when-playing { display: block; }
 .player.is-playing .when-paused { display: none; }
+@media (prefers-reduced-motion: reduce) { .player-fill { transition: none; } }
 
 ul.entries > li { margin-bottom: 1em; }
 
@@ -128,21 +169,17 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
   <!-- Music player for the /aura page only. The script at the bottom shows it there and leaves it hidden at /. -->
   <div class="player" id="player" hidden>
-    <div class="player-body">
-      <div class="lcd" aria-live="off">
-        <div class="lcd-row">
-          <svg class="when-playing" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          <svg class="when-paused" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zM7 1h3v10H7z"/></svg>
-          <span class="lcd-title">What Can I Do</span>
-        </div>
-        <div class="lcd-artist">Shaun Dean, Sean Coy, Kaylee</div>
-        <div class="lcd-bar"><div class="lcd-fill" id="player-fill"></div></div>
-        <div class="lcd-times"><span id="player-elapsed">0:00</span><span id="player-remaining">-3:21</span></div>
+    <button class="player-orb" id="player-toggle" type="button" aria-label="Play">
+      <svg class="when-paused" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>
+      <svg class="when-playing" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+    </button>
+    <div class="player-screen">
+      <div class="player-meta">
+        <span class="player-title">What Can I Do</span>
+        <span class="player-artist">Shaun Dean, Sean Coy, Kaylee</span>
       </div>
-      <button class="player-btn" id="player-toggle" type="button" aria-label="Play">
-        <svg class="when-paused" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-        <svg class="when-playing" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zM7 1h3v10H7z"/></svg>
-      </button>
+      <div class="player-track"><div class="player-fill" id="player-fill"></div></div>
+      <div class="player-times"><span id="player-elapsed">0:00</span><span class="player-hint">Tap anywhere to play</span><span id="player-remaining">-3:21</span></div>
     </div>
     <audio id="player-audio" loop preload="none"></audio>
   </div>
@@ -227,22 +264,25 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
       if (audio.paused) audio.play().catch(function () {}); else audio.pause();
     });
 
-    // Browsers block sound until the visitor interacts, so if autoplay is refused,
-    // start on the first click, tap, or key press anywhere on the page.
-    function waitForVisitor() {
-      function start(e) {
-        stop();
-        if (!player.contains(e.target)) audio.play().catch(function () {});
-      }
-      function stop() {
-        document.removeEventListener("pointerdown", start, true);
-        document.removeEventListener("keydown", start, true);
-      }
-      document.addEventListener("pointerdown", start, true);
-      document.addEventListener("keydown", start, true);
+    // Browsers block sound until the visitor interacts, so if autoplay is refused, show a hint and
+    // start on the first click, tap, or key press anywhere. Taps only count as interaction on
+    // pointerup/touchend, so listen for all of these and stop once the song is playing.
+    var events = ["pointerdown", "pointerup", "touchend", "click", "keydown"];
+    function tryStart(e) {
+      if (player.contains(e.target) || !audio.paused) return;
+      audio.play().catch(function () {});
     }
+    function stopWaiting() {
+      player.classList.remove("is-waiting");
+      events.forEach(function (ev) { document.removeEventListener(ev, tryStart, true); });
+    }
+    audio.addEventListener("play", stopWaiting);
     var attempt = audio.play();
-    if (attempt && attempt.catch) attempt.catch(waitForVisitor);
+    if (attempt && attempt.catch) attempt.catch(function () {
+      if (!audio.paused) return;
+      player.classList.add("is-waiting");
+      events.forEach(function (ev) { document.addEventListener(ev, tryStart, true); });
+    });
     render();
   })();
 </script>
