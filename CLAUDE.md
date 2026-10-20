@@ -23,7 +23,7 @@ Rules that keep this working:
 
 - `index.html`: the home page. Plain HTML with a small `<style>` block.
 - `photo.jpg`: the portrait on the main page. 320×320 pixels, shown at 160×160.
-- `aura.jpg`: the photo on the `/aura` page. 730×589 pixels, shown at 365×295.
+- `aura.jpg`: the photo on the `/aura` page, cropped so Murphy is centered. 750×589 pixels, shown at 375×295.
 - `vercel.json`: the `/aura` routing described above, plus `/movies` → `movies.html`.
 - `movies.html`: every movie Murphy has watched, ranked, at `murphy.wiki/movies`.
 - `writing/*.html`: one page per essay.
