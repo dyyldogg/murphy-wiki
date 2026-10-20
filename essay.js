@@ -1,6 +1,6 @@
 // Flows an essay's text onto letter-size pages, the way Google Docs does,
-// and numbers each page in the header ("Shimamoto 1", "Shimamoto 2", ...).
-// The essay text lives in <article id="source" data-surname="...">.
+// and numbers each page in the header (1, 2, 3, ...).
+// The essay text lives in <article id="source">.
 //
 // Footnotes: the source lists them as numbered endnotes (<p class="note" id="fn1">)
 // after a Notes heading, which is what shows without JavaScript. Here each note is
@@ -19,7 +19,6 @@
     var pages = document.getElementById("pages");
     if (!source || !frame || !pages) return;
 
-    var surname = source.getAttribute("data-surname") || "";
     var count = 0;
     var body = null;
     var notesEl = null;
@@ -43,7 +42,7 @@
       page.className = "page";
       var header = document.createElement("div");
       header.className = "page-header";
-      header.textContent = surname + " " + count;
+      header.textContent = String(count);
       body = document.createElement("div");
       body.className = "page-body essay";
       notesEl = document.createElement("div");

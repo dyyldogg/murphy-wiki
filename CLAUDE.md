@@ -39,15 +39,13 @@ The look is deliberately plain, like an unstyled academic homepage. Keep it that
 
 ## Essay pages
 
-Every essay looks like an MLA paper open in Google Docs. That means letter-size white pages on the gray Docs background, 1-inch margins, Times New Roman 12 pt, double spacing, "Shimamoto 1" (surname and page number) in the top-right header, the four-line heading, a centered title, half-inch first-line indents, and Works Cited on its own page with hanging indents. `essay.js` flows the text onto pages and numbers them, so never add page breaks or page numbers by hand.
+Every essay looks like an MLA paper open in Google Docs. That means letter-size white pages on the gray Docs background, 1-inch margins, Times New Roman 12 pt, double spacing, the page number alone in the top-right header, a two-line heading (name and date), a centered title, half-inch first-line indents, and Works Cited on its own page with hanging indents. `essay.js` flows the text onto pages and numbers them, so never add page breaks or page numbers by hand.
 
 To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.html` and change only the `<head>` text and the contents of `<article id="source">`:
 
 ```html
-<article class="source essay" id="source" data-surname="Shimamoto">
+<article class="source essay" id="source">
   <p class="heading-line">Murphy Shimamoto</p>
-  <p class="heading-line">Independent Study</p>
-  <p class="heading-line">Film and Philosophy</p>
   <p class="heading-line">19 October 2026</p>
   <h1 class="title">Title of the Essay</h1>
   <p>Each paragraph is a plain p. The first line is indented automatically.</p>
