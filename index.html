@@ -48,7 +48,7 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   margin-inline: auto;
 }
 
-/* Music player, shown only at /aura below Contact on the right: a small original Frutiger Aero-style bar. Glossy sky-blue glass
+/* Music player, shown only at /aura below Contact on the left: a small original Frutiger Aero-style bar. Glossy sky-blue glass
    with a top-half shine and bubbles, a glossy green orb button, and an aqua progress bar. */
 .player {
   --sky-top: #f4fcff;
@@ -71,7 +71,7 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
   gap: 9px;
   width: 280px;
   max-width: 100%;
-  margin: 0 0 1em auto;
+  margin: 0 0 1em;
   padding: 6px 16px 6px 6px;
   overflow: hidden;
   border: 1px solid var(--glass-edge);
@@ -149,6 +149,8 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
 .player .when-playing { display: none; }
 .player.is-playing .when-playing { display: block; }
 .player.is-playing .when-paused { display: none; }
+/* Keep the player hidden at the main address: .player's display: flex would otherwise override `hidden`. */
+.player[hidden] { display: none; }
 /* The song plays through a hidden <video>: browsers allow silent autoplay only for video, which lets it start instantly. */
 .player-media { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .player-fill { transition: none; } }
