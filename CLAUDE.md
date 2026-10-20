@@ -24,7 +24,8 @@ Rules that keep this working:
 - `index.html`: the home page. Plain HTML with a small `<style>` block.
 - `photo.jpg`: the portrait on the main page. 320×320 pixels, shown at 160×160.
 - `aura.jpg`: the photo on the `/aura` page. 730×589 pixels, shown at 365×295.
-- `vercel.json`: the `/aura` routing described above.
+- `vercel.json`: the `/aura` routing described above, plus `/movies` → `movies.html`.
+- `movies.html`: every movie Murphy has watched, ranked, at `murphy.wiki/movies`.
 - `writing/*.html`: one page per essay.
 - `essay.css`, `essay.js`: shared by every essay page. They lay the essay out like an MLA paper in Google Docs.
 
@@ -33,20 +34,19 @@ Rules that keep this working:
 The look is deliberately plain, like an unstyled academic homepage. Keep it that way unless Murphy asks otherwise.
 
 - White background, black text, Times New Roman, default blue/purple underlined links.
-- Bold `<h1>` name, photo under it, then `<h2>` sections: Contact, About, Writing, Recently Watched.
-- No frameworks, build tools, web fonts, or JavaScript on the home page. The only script on the site is `essay.js`.
+- Bold `<h1>` name, photo under it, then `<h2>` sections: Contact, About, Writing, Movies.
+- No frameworks, build tools, web fonts, or JavaScript on the home page. The only scripts on the site are `essay.js` and the one-line count updater in `movies.html`.
 - Film, book, and artwork titles go in `<i>`.
 
 ## Essay pages
 
-Every essay looks like an MLA paper open in Google Docs. That means letter-size white pages on the gray Docs background, 1-inch margins, Times New Roman 12 pt, double spacing, the page number alone in the top-right header, a two-line heading (name and date), a centered title, half-inch first-line indents, and Works Cited on its own page with hanging indents. `essay.js` flows the text onto pages and numbers them, so never add page breaks or page numbers by hand.
+Every essay looks like an MLA paper open in Google Docs. That means letter-size white pages on the gray Docs background, 1-inch margins, Times New Roman 12 pt, double spacing, the page number alone in the top-right header, a one-line heading (his name, no date), a centered title, half-inch first-line indents, and Works Cited on its own page with hanging indents. `essay.js` flows the text onto pages and numbers them, so never add page breaks or page numbers by hand.
 
 To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.html` and change only the `<head>` text and the contents of `<article id="source">`:
 
 ```html
 <article class="source essay" id="source">
   <p class="heading-line">Murphy Shimamoto</p>
-  <p class="heading-line">19 October 2026</p>
   <h1 class="title">Title of the Essay</h1>
   <p>Each paragraph is a plain p. The first line is indented automatically.</p>
   <h2 class="works-cited-title" data-page-break>Works Cited</h2>
@@ -56,7 +56,7 @@ To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.h
 
 - Section headings, if the essay has them: `<h2 class="section-heading">Plato</h2>`. They're bold and flush left.
 - Footnotes are written as numbered endnotes on a Notes page placed before Works Cited, and that is how they look without JavaScript. With JavaScript, `essay.js` sets each note at the foot of the page that cites it (10 pt, single spaced, under a short rule, as in a Google Doc) and leaves out the Notes page, so never place notes by hand. In the text: `<sup><a id="fnref1" href="#fn1">1</a></sup>`. On the Notes page, after `<h2 class="notes-title" data-page-break>Notes</h2>`: `<p class="note" id="fn1"><sup><a href="#fnref1">1</a></sup> Nietzsche, <i>The Gay Science</i>, 193-4.</p>`.
-- The date line uses MLA order: day, month, year.
+- Essays carry no date. The only place an essay's date appears is its entry in the home page Writing list.
 - Italicize a film or book title inside the essay title, as MLA does: `<i>You Can See Everything</i>: The Impenetrability of the Subject`.
 - Keep Works Cited entries in alphabetical order, ignoring a leading "The" or "A".
 - Never change Murphy's essay wording while reformatting.
@@ -75,7 +75,7 @@ To add an essay, copy `writing/you-can-see-everything.html` to `writing/<slug>.h
 
 Make its page as described under Essay pages, and link the title with a root path: `<b><a href="/writing/<slug>.html">Title</a></b>`.
 
-**Log a film.** Add `<li><i>Title</i> (Director, Year)</li>` at the top of Recently Watched. Keep about the last five or six films.
+**Add a film to the ranking.** In `movies.html`, insert `<li><i>Title</i></li>` inside `<ol id="ranking">` at the film's rank (best first). Put a year or note that isn't part of the title outside the italics: `<li><i>Cold War</i> (2018)</li>`. Escape `&` as `&amp;`. The numbers come from the `<ol>`, and the movie count under the heading updates itself, so don't type either by hand.
 
 **Change a photo.** Replace `photo.jpg` (main page) or `aura.jpg` (aura page), keeping the file name. Save the new file at twice the size you want it shown. For example, a 320×320 file shows at 160×160.
 

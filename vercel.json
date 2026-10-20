@@ -1,9 +1,23 @@
 {
   "redirects": [
-    { "source": "/aura", "destination": "/aura/", "permanent": true }
+    {
+      "source": "/aura",
+      "destination": "/aura/",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/aura/", "destination": "/index.html" },
-    { "source": "/aura/photo.jpg", "destination": "/aura.jpg" }
+    {
+      "source": "/aura/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aura/photo.jpg",
+      "destination": "/aura.jpg"
+    },
+    {
+      "source": "/movies",
+      "destination": "/movies.html"
+    }
   ]
 }
