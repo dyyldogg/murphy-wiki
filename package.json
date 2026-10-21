@@ -1,0 +1,9 @@
+{
+  "name": "murphy-wiki",
+  "private": true,
+  "type": "module",
+  "description": "murphy.wiki. Static pages plus one serverless function (api/comments.js) for /aura comments.",
+  "dependencies": {
+    "@vercel/blob": "2.8.0"
+  }
+}

@@ -156,6 +156,38 @@ h2 { font-size: 1.5em; margin: 0.83em 0; }
 
 ul.entries > li { margin-bottom: 1em; }
 
+/* Comments, shown only at /aura. Plain like the rest of the page. */
+.comments-section[hidden] { display: none; }
+.comment-form { display: flex; flex-direction: column; gap: 0.6em; max-width: 30em; margin: 0 0 1.5em; }
+.comment-form label { display: flex; flex-direction: column; gap: 0.2em; }
+.comment-form input,
+.comment-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+}
+.comment-form textarea { min-height: 5.5em; resize: vertical; }
+.comment-form input:focus-visible,
+.comment-form textarea:focus-visible,
+.comment-form button:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+.comment-actions { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75em; }
+.comment-form button { font-family: var(--serif); font-size: 16px; padding: 2px 12px; cursor: pointer; }
+.comment-form button:disabled { cursor: default; }
+.comment-status { color: #555555; }
+.comment-status.is-error { color: #a40000; }
+.comment-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.comment-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1em; max-width: 40em; }
+.comment-list li { min-width: 0; }
+.comment-date { color: #555555; }
+.comment-text { margin: 0.15em 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.comment-empty { color: #555555; }
+
 a { color: var(--link); }
 a:visited { color: var(--visited); }
 a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
@@ -252,6 +284,28 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     <li><b><a href="/movies">Full list (1,147) ranked</a></b></li>
   </ul>
 
+  <!-- Comments for the /aura page only. The script at the bottom shows this there and leaves it hidden at /. -->
+  <section class="comments-section" id="comments" hidden>
+    <h2>Comments</h2>
+    <form class="comment-form" id="comment-form" novalidate>
+      <label for="comment-name">Name
+        <input id="comment-name" name="name" type="text" maxlength="40" autocomplete="nickname" required>
+      </label>
+      <label for="comment-text">Comment
+        <textarea id="comment-text" name="text" maxlength="500" rows="4" required></textarea>
+      </label>
+      <div class="comment-trap" aria-hidden="true">
+        <label for="comment-website">Website <input id="comment-website" name="website" type="text" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <div class="comment-actions">
+        <button type="submit" id="comment-submit">Post comment</button>
+        <span class="comment-status" id="comment-status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+    <ul class="comment-list" id="comment-list"></ul>
+    <p class="comment-empty" id="comment-empty" hidden>No comments yet.</p>
+  </section>
+
 </main>
 <script>
   // /aura only: show the player and play the song. Does nothing at the main address.
@@ -314,6 +368,91 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
       audio.play().catch(function () {});
     });
     render();
+  })();
+</script>
+<script>
+  // /aura only: comments. Visitors give a name and a comment, no account. Does nothing at the main address.
+  (function () {
+    if (!/^\/aura(\/|$)/.test(location.pathname)) return;
+    var section = document.getElementById("comments");
+    var form = document.getElementById("comment-form");
+    var nameInput = document.getElementById("comment-name");
+    var textInput = document.getElementById("comment-text");
+    var trap = document.getElementById("comment-website");
+    var submit = document.getElementById("comment-submit");
+    var status = document.getElementById("comment-status");
+    var list = document.getElementById("comment-list");
+    var empty = document.getElementById("comment-empty");
+    section.hidden = false;
+    try { nameInput.value = localStorage.getItem("aura-comment-name") || ""; } catch (e) {}
+
+    function say(message, isError) {
+      status.textContent = message || "";
+      status.classList.toggle("is-error", !!isError);
+    }
+    function formatDate(iso) {
+      var d = new Date(iso);
+      return isNaN(d) ? "" : d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    }
+    function render(c) {
+      var li = document.createElement("li");
+      var who = document.createElement("b");
+      who.textContent = c.name;
+      li.appendChild(who);
+      var date = formatDate(c.date);
+      if (date) {
+        var when = document.createElement("span");
+        when.className = "comment-date";
+        when.textContent = " \u00b7 " + date;
+        li.appendChild(when);
+      }
+      var text = document.createElement("p");
+      text.className = "comment-text";
+      text.textContent = c.text;
+      li.appendChild(text);
+      return li;
+    }
+    function refreshEmpty() { empty.hidden = list.children.length > 0; }
+
+    fetch("/api/comments", { headers: { Accept: "application/json" } })
+      .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+      .then(function (data) {
+        (data.comments || []).forEach(function (c) { list.appendChild(render(c)); });
+        refreshEmpty();
+      })
+      .catch(function () { empty.hidden = false; empty.textContent = "Couldn\u2019t load comments. Refresh to try again."; });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = nameInput.value.trim();
+      var text = textInput.value.trim();
+      if (!name || !text) {
+        say("Write a name and a comment.", true);
+        (name ? textInput : nameInput).focus();
+        return;
+      }
+      submit.disabled = true;
+      say("Posting\u2026");
+      fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name: name, text: text, website: trap.value })
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (data) {
+            if (!r.ok) throw new Error(data.error || "Couldn\u2019t post your comment. Try again in a moment.");
+            return data;
+          });
+        })
+        .then(function (data) {
+          if (data.comment) { list.insertBefore(render(data.comment), list.firstChild); refreshEmpty(); }
+          textInput.value = "";
+          try { localStorage.setItem("aura-comment-name", name); } catch (e) {}
+          say("Posted.");
+        })
+        .catch(function (err) { say(err.message, true); })
+        .then(function () { submit.disabled = false; });
+    });
   })();
 </script>
 </body>

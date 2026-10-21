@@ -15,6 +15,10 @@ Both addresses serve the same `index.html`. Only the photo differs, so any edit 
 
 The `/aura` page also has a music player, below Contact and aligned left. Its markup (`#player`) sits in `index.html` with `hidden`, and the script at the bottom of `index.html` shows it and loads `/what-can-i-do.mp3` only when the path is `/aura`, so the main address never shows it or downloads the song. `.player[hidden] { display: none; }` is what keeps it hidden there, because `.player` sets `display: flex`; don't remove that rule. The song starts the instant the page loads, 56 seconds in (`START = 56` in the script; it loops from the beginning after that). Browsers block sound until a visitor interacts, so if sound is refused the script plays the song muted through a hidden `<video>` element (browsers allow silent autoplay only for video, not `<audio>`, so keep it a video), shows "Scroll or tap for sound" on phones (a swipe ends in a touch, which counts) or "Click anywhere for sound" on computers (mouse-wheel and trackpad scrolling never count), and unmutes on the first click, tap, swipe, or key press anywhere (the orb's first press also unmutes rather than pausing). The player is a small bar (280px wide) in an original Frutiger Aero style (glossy sky-blue glass, rising bubbles in the right margin, a green orb button, an aqua progress bar). Keep it original: don't copy a real product's design, such as an iPod or a specific media player skin. To change the song, replace `what-can-i-do.mp3` and update the title and artist in the player's LCD.
 
+The `/aura` page also has comments, at the bottom after Movies. Visitors write a name and a comment, with no account. The section (`#comments`) sits in `index.html` with `hidden`, and the comments script at the bottom of `index.html` shows it and loads comments only at `/aura`. `.comments-section[hidden] { display: none; }` keeps it hidden at the main address; don't remove it. Comments are always inserted with `textContent`, never `innerHTML`, so nobody can inject HTML.
+
+The comments are saved by `api/comments.js`, a Vercel serverless function at `/api/comments` (GET lists them newest first; POST saves one). Each comment is a small JSON file in the `murphy-wiki-comments` Vercel Blob store under `aura-comments/`; the store's `BLOB_READ_WRITE_TOKEN` is already set on the project. Limits: names up to 40 characters, comments up to 500, one post per person every 20 seconds, plus a hidden spam-trap field. The list is cached for about a minute, so a new comment can take up to a minute to show for other visitors (the poster sees theirs right away). To remove a comment, delete its file in the Vercel dashboard: Storage → murphy-wiki-comments → Browser → `aura-comments/`. It disappears from the page within about a minute.
+
 Rules that keep this working:
 
 - Never create a separate aura page or an `aura/` folder.
@@ -29,6 +33,7 @@ Rules that keep this working:
 - `vercel.json`: the `/aura` routing described above, plus `/movies` → `movies.html`.
 - `what-can-i-do.mp3`: the song that plays on the `/aura` page.
 - `movies.html`: every movie Murphy has watched, ranked, at `murphy.wiki/movies`.
+- `api/comments.js`: the `/aura` comments endpoint (see above). `package.json` and `package-lock.json` exist only for its one dependency, `@vercel/blob`.
 - `writing/*.html`: one page per essay.
 - `essay.css`, `essay.js`: shared by every essay page. They lay the essay out like an MLA paper in Google Docs.
 
@@ -39,7 +44,7 @@ The look is deliberately plain, like an unstyled academic homepage. Keep it that
 - White background, black text, Times New Roman, default blue/purple underlined links.
 - Everything is left-aligned: bold `<h1>` name, the photo under it, then `<h2>` sections: Contact, About, Writing, Movies.
 - The email is written out as `murphy.shimamoto[at]gmail[dot]com`, not as a link.
-- No frameworks, build tools, or web fonts. The only scripts on the site are the `/aura` music player at the bottom of `index.html`, `essay.js`, and the one-line count updater in `movies.html`.
+- No frameworks, build steps, or web fonts. The only scripts on the site are the `/aura` music player and comments scripts at the bottom of `index.html`, `essay.js`, and the one-line count updater in `movies.html`. The only server code is `api/comments.js`.
 - Film, book, and artwork titles go in `<i>`.
 
 ## Essay pages
