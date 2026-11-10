@@ -153,13 +153,5 @@ html.js .source { display: none; }
 }
 .song-panel[hidden] { display: none; }
 .song-panel iframe { display: block; border: 0; }
-.song-panel .song-size {
-  display: block;
-  margin-bottom: 6px;
-  font: 13px var(--serif);
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  padding: 2px 8px;
-  cursor: pointer;
-}
+.song-panel .song-note { margin: 0; max-width: 200px; font-size: 13px; }
+.song-panel iframe[hidden], .song-panel .song-note[hidden] { display: none; }

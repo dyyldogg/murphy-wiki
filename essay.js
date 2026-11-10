@@ -237,10 +237,7 @@
 // and sized so it stays in the margin beside the essay text.
 (function () {
   var VIDEO_ID = "jtRV9DWKTKo";
-  var PAGE_W = 816;       // page width in px, as in the paginator
-  var MARGIN = 96;        // 1in margin, as in the paginator
-  var SMALL = 320;
-  var BIG = 720;
+  var SIZE = 320;         // the largest the video is allowed to be
 
   function allowed() {
     try { return sessionStorage.getItem("auraVisit") === "1"; } catch (e) { return false; }
@@ -253,34 +250,40 @@
     panel.className = "song-panel";
     panel.hidden = true;
 
+    var note = document.createElement("p");
+    note.className = "song-note";
+    note.textContent = "Widen the window to see the video beside the essay.";
+    note.hidden = true;
+    panel.appendChild(note);
+
     var button = document.createElement("button");
     button.type = "button";
     button.className = "song-button";
     button.textContent = "\u266A Romantika";
     button.setAttribute("aria-expanded", "false");
 
-    var size = document.createElement("button");
-    size.type = "button";
-    size.className = "song-size";
-    size.textContent = "Enlarge";
-
-    // Width the video can have without reaching the essay text: the room between the text's
-    // right edge (the page's right margin is blank) and the window's right edge.
-    function fitWidth(wanted) {
+    // Width the video can have without touching the paper: the room between the page's right
+    // edge and the window's right edge, minus the gutter and the panel's padding and border.
+    function roomBeside() {
       var frame = document.getElementById("frame");
-      if (!frame || !frame.offsetWidth) return wanted;
-      var scale = frame.offsetWidth / PAGE_W;
-      var textRight = frame.getBoundingClientRect().right - MARGIN * scale;
-      var room = window.innerWidth - textRight - 34; // 16px gutter + panel padding and border
-      return Math.max(120, Math.min(wanted, room));
+      if (!frame || !frame.offsetWidth) return SIZE;
+      return window.innerWidth - frame.getBoundingClientRect().right - 34;
     }
 
+    // Sizes the video to the room beside the paper. Where there is less than MIN_W of room
+    // (a narrow window), the video is not shown and a note asks for a wider window instead.
+    var MIN_W = 100;
     function sizeVideo() {
       var frame = panel.querySelector("iframe");
-      if (!frame) return;
-      var w = fitWidth(size.textContent === "Shrink" ? BIG : SMALL);
-      frame.style.width = w + "px";
-      frame.style.height = (w * 9 / 16) + "px";
+      var room = roomBeside();
+      var fits = room >= MIN_W;
+      if (frame) {
+        var w = Math.min(SIZE, room);
+        frame.style.width = w + "px";
+        frame.style.height = (w * 9 / 16) + "px";
+        frame.hidden = !fits;
+      }
+      note.hidden = fits;
     }
 
     button.addEventListener("click", function () {
@@ -291,19 +294,13 @@
         video.title = "Romantika by Brutalismus 3000";
         video.allow = "encrypted-media; picture-in-picture";
         video.allowFullscreen = true;
-        panel.insertBefore(video, size);
+        panel.insertBefore(video, note);
       }
       panel.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));
       sizeVideo();
     });
 
-    size.addEventListener("click", function () {
-      size.textContent = size.textContent === "Enlarge" ? "Shrink" : "Enlarge";
-      sizeVideo();
-    });
-
-    panel.appendChild(size);
     document.body.appendChild(panel);
     document.body.appendChild(button);
     window.addEventListener("resize", sizeVideo);
