@@ -250,17 +250,28 @@
 
     button.addEventListener("click", function () {
       var opening = panel.hidden;
-      if (opening && !panel.firstChild) {
+      if (opening && !panel.querySelector("iframe")) {
         var frame = document.createElement("iframe");
         frame.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID;
         frame.title = "Romantika by Brutalismus 3000";
         frame.allow = "encrypted-media; picture-in-picture";
         frame.allowFullscreen = true;
-        panel.appendChild(frame);
+        panel.insertBefore(frame, size);
       }
       panel.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));
     });
+
+    var size = document.createElement("button");
+    size.type = "button";
+    size.className = "song-size";
+    size.textContent = "Enlarge";
+    size.addEventListener("click", function () {
+      var big = !panel.classList.contains("big");
+      panel.classList.toggle("big", big);
+      size.textContent = big ? "Shrink" : "Enlarge";
+    });
+    panel.appendChild(size);
 
     document.body.appendChild(panel);
     document.body.appendChild(button);
