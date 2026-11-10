@@ -237,7 +237,7 @@
 // and sized so it stays in the margin beside the essay text.
 (function () {
   var VIDEO_ID = "jtRV9DWKTKo";
-  var SIZE = 560;         // the largest the video is allowed to be (16:9, so the cover is never stretched)
+  var SIZE = 560;         // the largest the frame is allowed to be wide
 
   function allowed() {
     try { return sessionStorage.getItem("auraVisit") === "1"; } catch (e) { return false; }
@@ -276,7 +276,9 @@
       if (frame) {
         var w = Math.min(SIZE, room);
         frame.style.width = w + "px";
-        frame.style.height = (w * 9 / 16) + "px";
+        // A taller 4:3 frame: YouTube keeps the video at its own shape and centres it, so the
+        // cover is not stretched; the extra height is black above and below.
+        frame.style.height = (w * 4 / 3) + "px";
         frame.hidden = !fits;
       }
       if (controls) controls.hidden = !fits;
