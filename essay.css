@@ -152,12 +152,7 @@ html.js .source { display: none; }
   padding: 8px;
 }
 .song-panel[hidden] { display: none; }
-.song-panel iframe {
-  display: block;
-  width: min(320px, 80vw);
-  height: calc(min(320px, 80vw) * 9 / 16);
-  border: 0;
-}
+.song-panel iframe { display: block; border: 0; }
 .song-panel .song-size {
   display: block;
   margin-bottom: 6px;
@@ -167,8 +162,4 @@ html.js .source { display: none; }
   border: 1px solid var(--ink);
   padding: 2px 8px;
   cursor: pointer;
-}
-.song-panel.big iframe {
-  width: min(720px, 80vw);
-  height: calc(min(720px, 80vw) * 9 / 16);
 }

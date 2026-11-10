@@ -326,6 +326,7 @@ a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   // /aura only: show the player and play the song. Does nothing at the main address.
   (function () {
     if (!/^\/aura(\/|$)/.test(location.pathname)) return;
+    try { sessionStorage.setItem("auraVisit", "1"); } catch (e) {}
     var player = document.getElementById("player");
     var audio = document.getElementById("player-audio");
     var toggle = document.getElementById("player-toggle");

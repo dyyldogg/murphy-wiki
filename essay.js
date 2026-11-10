@@ -232,12 +232,23 @@
   }
 })();
 
-// A small button in the bottom-right corner that opens "Romantika" by Brutalismus 3000.
-// The YouTube player is only created when the button is first pressed.
+// The Romantika button in the bottom-right corner, shown only to visitors who came through /aura
+// (index.html sets the sessionStorage flag there). The YouTube player is created on the first press
+// and sized so it stays in the margin beside the essay text.
 (function () {
   var VIDEO_ID = "jtRV9DWKTKo";
+  var PAGE_W = 816;       // page width in px, as in the paginator
+  var MARGIN = 96;        // 1in margin, as in the paginator
+  var SMALL = 320;
+  var BIG = 720;
+
+  function allowed() {
+    try { return sessionStorage.getItem("auraVisit") === "1"; } catch (e) { return false; }
+  }
 
   function mount() {
+    if (!allowed()) return;
+
     var panel = document.createElement("div");
     panel.className = "song-panel";
     panel.hidden = true;
@@ -248,33 +259,54 @@
     button.textContent = "\u266A Romantika";
     button.setAttribute("aria-expanded", "false");
 
-    button.addEventListener("click", function () {
-      var opening = panel.hidden;
-      if (opening && !panel.querySelector("iframe")) {
-        var frame = document.createElement("iframe");
-        frame.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID;
-        frame.title = "Romantika by Brutalismus 3000";
-        frame.allow = "encrypted-media; picture-in-picture";
-        frame.allowFullscreen = true;
-        panel.insertBefore(frame, size);
-      }
-      panel.hidden = !opening;
-      button.setAttribute("aria-expanded", String(opening));
-    });
-
     var size = document.createElement("button");
     size.type = "button";
     size.className = "song-size";
     size.textContent = "Enlarge";
-    size.addEventListener("click", function () {
-      var big = !panel.classList.contains("big");
-      panel.classList.toggle("big", big);
-      size.textContent = big ? "Shrink" : "Enlarge";
-    });
-    panel.appendChild(size);
 
+    // Width the video can have without reaching the essay text: the room between the text's
+    // right edge (the page's right margin is blank) and the window's right edge.
+    function fitWidth(wanted) {
+      var frame = document.getElementById("frame");
+      if (!frame || !frame.offsetWidth) return wanted;
+      var scale = frame.offsetWidth / PAGE_W;
+      var textRight = frame.getBoundingClientRect().right - MARGIN * scale;
+      var room = window.innerWidth - textRight - 34; // 16px gutter + panel padding and border
+      return Math.max(120, Math.min(wanted, room));
+    }
+
+    function sizeVideo() {
+      var frame = panel.querySelector("iframe");
+      if (!frame) return;
+      var w = fitWidth(size.textContent === "Shrink" ? BIG : SMALL);
+      frame.style.width = w + "px";
+      frame.style.height = (w * 9 / 16) + "px";
+    }
+
+    button.addEventListener("click", function () {
+      var opening = panel.hidden;
+      if (opening && !panel.querySelector("iframe")) {
+        var video = document.createElement("iframe");
+        video.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID;
+        video.title = "Romantika by Brutalismus 3000";
+        video.allow = "encrypted-media; picture-in-picture";
+        video.allowFullscreen = true;
+        panel.insertBefore(video, size);
+      }
+      panel.hidden = !opening;
+      button.setAttribute("aria-expanded", String(opening));
+      sizeVideo();
+    });
+
+    size.addEventListener("click", function () {
+      size.textContent = size.textContent === "Enlarge" ? "Shrink" : "Enlarge";
+      sizeVideo();
+    });
+
+    panel.appendChild(size);
     document.body.appendChild(panel);
     document.body.appendChild(button);
+    window.addEventListener("resize", sizeVideo);
   }
 
   if (document.readyState === "loading") {
