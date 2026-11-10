@@ -237,7 +237,7 @@
 // and sized so it stays in the margin beside the essay text.
 (function () {
   var VIDEO_ID = "jtRV9DWKTKo";
-  var SIZE = 320;         // the largest the video is allowed to be
+  var SIZE = 560;         // the largest the video is allowed to be (16:9, so the cover is never stretched)
 
   function allowed() {
     try { return sessionStorage.getItem("auraVisit") === "1"; } catch (e) { return false; }
