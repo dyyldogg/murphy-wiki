@@ -129,43 +129,57 @@ html.js .source { display: none; }
   .source { padding: 24px; }
 }
 
-/* The Romantika button and its player, in the bottom-right corner (see essay.js). */
-.song-button {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 10;
-  font: 14px var(--serif);
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  padding: 4px 10px;
+/* The Romantika button and its player, in the bottom-right corner (see essay.js).
+   A matched set: one dark, round style for every control. */
+.song-button,
+.song-controls button,
+.song-controls a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 34px;
+  min-width: 34px;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 17px;
+  background: #1c1c1e;
+  color: #ffffff;
+  font: 14px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
+.song-button:hover,
+.song-controls button:hover,
+.song-controls a:hover { background: #3a3a3d; }
+.song-button:active,
+.song-controls button:active,
+.song-controls a:active { transform: scale(0.96); }
+.song-button:focus-visible,
+.song-controls button:focus-visible,
+.song-controls a:focus-visible { outline: 2px solid #0a84ff; outline-offset: 2px; }
+.song-controls button,
+.song-controls a { width: 34px; padding: 0; font-size: 13px; }
+
+.song-button { position: fixed; right: 16px; bottom: 16px; z-index: 10; padding: 0 14px; }
+.song-button[hidden] { display: none; }
+
 .song-panel {
   position: fixed;
   right: 16px;
-  bottom: 52px;
+  bottom: 60px;
   z-index: 10;
-  background: var(--paper);
-  border: 1px solid var(--ink);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   padding: 8px;
 }
 .song-panel[hidden] { display: none; }
-.song-panel iframe { display: block; border: 0; }
+.song-panel iframe { display: block; border: 0; border-radius: 8px; }
 .song-panel iframe[hidden] { display: none; }
-.song-button[hidden] { display: none; }
-.song-controls { display: flex; gap: 5px; margin-top: 6px; }
+
+.song-controls { display: flex; gap: 8px; margin-top: 8px; }
 .song-controls[hidden] { display: none; }
-.song-controls button,
-.song-controls a {
-  font: 15px var(--serif);
-  line-height: 1;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  padding: 6px 9px;
-  cursor: pointer;
-  text-decoration: none;
-  white-space: nowrap;
-}
