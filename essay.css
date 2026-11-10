@@ -128,3 +128,33 @@ html.js .source { display: none; }
 @media (max-width: 600px) {
   .source { padding: 24px; }
 }
+
+/* The Romantika button and its player, in the bottom-right corner (see essay.js). */
+.song-button {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10;
+  font: 14px var(--serif);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.song-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 52px;
+  z-index: 10;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 8px;
+}
+.song-panel[hidden] { display: none; }
+.song-panel iframe {
+  display: block;
+  width: min(320px, 80vw);
+  height: calc(min(320px, 80vw) * 9 / 16);
+  border: 0;
+}

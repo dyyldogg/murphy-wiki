@@ -231,3 +231,44 @@
     start();
   }
 })();
+
+// A small button in the bottom-right corner that opens "Romantika" by Brutalismus 3000.
+// The YouTube player is only created when the button is first pressed.
+(function () {
+  var VIDEO_ID = "jtRV9DWKTKo";
+
+  function mount() {
+    var panel = document.createElement("div");
+    panel.className = "song-panel";
+    panel.hidden = true;
+
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "song-button";
+    button.textContent = "\u266A Romantika";
+    button.setAttribute("aria-expanded", "false");
+
+    button.addEventListener("click", function () {
+      var opening = panel.hidden;
+      if (opening && !panel.firstChild) {
+        var frame = document.createElement("iframe");
+        frame.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID;
+        frame.title = "Romantika by Brutalismus 3000";
+        frame.allow = "encrypted-media; picture-in-picture";
+        frame.allowFullscreen = true;
+        panel.appendChild(frame);
+      }
+      panel.hidden = !opening;
+      button.setAttribute("aria-expanded", String(opening));
+    });
+
+    document.body.appendChild(panel);
+    document.body.appendChild(button);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mount);
+  } else {
+    mount();
+  }
+})();
