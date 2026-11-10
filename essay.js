@@ -290,11 +290,33 @@
       var opening = panel.hidden;
       if (opening && !panel.querySelector("iframe")) {
         var video = document.createElement("iframe");
-        video.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID;
+        video.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID + "?enablejsapi=1";
         video.title = "Romantika by Brutalismus 3000";
         video.allow = "encrypted-media; picture-in-picture";
         video.allowFullscreen = true;
         panel.insertBefore(video, note);
+
+        // Play and Pause buttons below the video, large enough to press, sent to the player.
+        var bar = document.createElement("div");
+        bar.className = "song-controls";
+        [["Play", "playVideo"], ["Pause", "pauseVideo"]].forEach(function (pair) {
+          var control = document.createElement("button");
+          control.type = "button";
+          control.textContent = pair[0];
+          control.addEventListener("click", function () {
+            if (video.contentWindow) {
+              video.contentWindow.postMessage(JSON.stringify({ event: "command", func: pair[1], args: [] }), "https://www.youtube-nocookie.com");
+            }
+          });
+          bar.appendChild(control);
+        });
+        var link = document.createElement("a");
+        link.href = "https://www.youtube.com/watch?v=" + VIDEO_ID;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Watch on YouTube";
+        bar.appendChild(link);
+        panel.appendChild(bar);
       }
       panel.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));
