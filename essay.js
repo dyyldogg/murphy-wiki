@@ -250,11 +250,7 @@
     panel.className = "song-panel";
     panel.hidden = true;
 
-    var note = document.createElement("p");
-    note.className = "song-note";
-    note.textContent = "Widen the window to see the video beside the essay.";
-    note.hidden = true;
-    panel.appendChild(note);
+    var controls = null;
 
     var button = document.createElement("button");
     button.type = "button";
@@ -271,8 +267,8 @@
     }
 
     // Sizes the video to the room beside the paper. Where there is less than MIN_W of room
-    // (a narrow window), the video is not shown and a note asks for a wider window instead.
-    var MIN_W = 100;
+    // (a narrow window), the player is hidden altogether so nothing covers the paper.
+    var MIN_W = 130;
     function sizeVideo() {
       var frame = panel.querySelector("iframe");
       var room = roomBeside();
@@ -283,7 +279,9 @@
         frame.style.height = (w * 9 / 16) + "px";
         frame.hidden = !fits;
       }
-      note.hidden = fits;
+      if (controls) controls.hidden = !fits;
+      button.hidden = !fits;
+      if (!fits) panel.hidden = true;
     }
 
     button.addEventListener("click", function () {
@@ -294,18 +292,20 @@
         video.title = "Romantika by Brutalismus 3000";
         video.allow = "encrypted-media; picture-in-picture";
         video.allowFullscreen = true;
-        panel.insertBefore(video, note);
+        panel.insertBefore(video, panel.firstChild);
 
         // Play and Pause buttons below the video, large enough to press, sent to the player.
         var bar = document.createElement("div");
         bar.className = "song-controls";
-        [["Play", "playVideo"], ["Pause", "pauseVideo"]].forEach(function (pair) {
+        [["Play", "\u25B6", "playVideo"], ["Pause", "\u275A\u275A", "pauseVideo"]].forEach(function (pair) {
           var control = document.createElement("button");
           control.type = "button";
-          control.textContent = pair[0];
+          control.textContent = pair[1];
+          control.title = pair[0];
+          control.setAttribute("aria-label", pair[0]);
           control.addEventListener("click", function () {
             if (video.contentWindow) {
-              video.contentWindow.postMessage(JSON.stringify({ event: "command", func: pair[1], args: [] }), "https://www.youtube-nocookie.com");
+              video.contentWindow.postMessage(JSON.stringify({ event: "command", func: pair[2], args: [] }), "https://www.youtube-nocookie.com");
             }
           });
           bar.appendChild(control);
@@ -314,9 +314,12 @@
         link.href = "https://www.youtube.com/watch?v=" + VIDEO_ID;
         link.target = "_blank";
         link.rel = "noopener";
-        link.textContent = "Watch on YouTube";
+        link.textContent = "\u2197";
+        link.title = "Watch on YouTube";
+        link.setAttribute("aria-label", "Watch on YouTube");
         bar.appendChild(link);
         panel.appendChild(bar);
+        controls = bar;
       }
       panel.hidden = !opening;
       button.setAttribute("aria-expanded", String(opening));

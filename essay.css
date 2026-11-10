@@ -153,16 +153,19 @@ html.js .source { display: none; }
 }
 .song-panel[hidden] { display: none; }
 .song-panel iframe { display: block; border: 0; }
-.song-panel .song-note { margin: 0; max-width: 200px; font-size: 13px; }
-.song-panel iframe[hidden], .song-panel .song-note[hidden] { display: none; }
-.song-controls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.song-panel iframe[hidden] { display: none; }
+.song-button[hidden] { display: none; }
+.song-controls { display: flex; gap: 5px; margin-top: 6px; }
+.song-controls[hidden] { display: none; }
 .song-controls button,
 .song-controls a {
   font: 15px var(--serif);
+  line-height: 1;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid var(--ink);
-  padding: 6px 12px;
+  padding: 6px 9px;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
